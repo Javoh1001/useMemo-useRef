@@ -1,32 +1,34 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef,useMemo} from 'react';
 import './App.css';
 // import UseState from './hook/UseState';
+// import UseEffect1 from './hook/UseEffect';
+// import UseRef from './hook/UseRef';
+
+function complete(num){
+  let i =0;
+  while(i < 100000){
+    i++;
+  }
+  return num * 2;
+}
 
 const App = () =>{
-  const [user,setUser] = useState('users');
-  const [data,setData] = useState([]);
+  const [number,setNumber] = useState(8);
 
-  // useEffect(()=>{
-  //   console.log('render' + ' ' + user);
-  // },[user])
+  const computed = useMemo(()=>{
+    return complete(number)
+  },[number])
+  const [colored, setColored] = useState(false);
 
-  useEffect(()=>{
-    fetch(`https://jsonplaceholder.typicode.com/${user}`)
-    .then(response => response.json())
-    .then(json => setData(json))
-  })
+  const styles = {
+    color:colored? 'crimson':'white',
+  }
   return (
     <div className="App">
-        <div>
-          {/* <UseState /> */}
-          <p>User: {user}</p>
-          <div>
-            <button type="submit" onClick={()=> setUser('users')}>Web developer</button>
-            <button type="submit" onClick={()=>setUser('posts')}>Веб Разработчик</button>
-            <button type="submit" onClick={()=>setUser('todos')}>Реакт Девелопер</button>
-          </div>
-        </div>
-        {JSON.stringify(data,null)}
+        <p style={styles}>Amount: {computed}</p>
+        <button type="submit" onClick={()=>setNumber((prev)=> prev + 1)}>Add</button>
+        <button type="submit" onClick={()=> setNumber((prev)=> prev - 1)}>Delete</button>
+        <button type="submit" onClick={()=> setColored((prev)=> !prev)}>Edit</button>
     </div>
   );
 }
